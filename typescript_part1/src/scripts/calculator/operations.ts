@@ -15,7 +15,7 @@ export type ScalarOperation = {
     operation: BinaryOperation
 };
 
-export const mathOperations: ScalarOperation[] = [
+export const simpleMathOperations: ScalarOperation[] = [
     {
         operator: "+", 
         priority: 1,

@@ -1,17 +1,19 @@
-import { getOperation, BinaryOperation, mathOperations, ScalarOperation, mathOperatorsPriorities } from './operations'
+import { simpleMathOperations, ScalarOperation, mathOperatorsPriorities } from './operations';
+import { isNumber } from './validators';
 
-export interface IDirtyOperation { 
-    first: string|number,
-    second: string|number, 
+
+ type OperationWithExpressions = { 
+    first: string,
+    second: string, 
     operator: string
 }
  
-export const getLastPriorityOperation = (expression: string): IDirtyOperation => {
+export const getLastPriorityOperation = (expression: string): OperationWithExpressions  => {
     let priority = Math.max(...mathOperatorsPriorities);
 
     while (priority > -1) {
         let operatorLastIndex = -1;
-        const operators: string[] = mathOperations.filter(opr => opr.priority === priority)
+        const operators: string[] = simpleMathOperations.filter(opr => opr.priority === priority)
             .map(opr => opr.operator);
         operators.forEach(opr => {
             const index: number = expression.lastIndexOf(opr);
@@ -31,27 +33,28 @@ export const getLastPriorityOperation = (expression: string): IDirtyOperation =>
         priority--;
     }
 
-    return;
-    // return {
-    //     first:  expression.substring(operationIndex + 1, expression.length),
-    //     second: expression.substring(0, operationIndex - 1),
-    //     operator: expression.substr(operationIndex, 1)
-    // };
+    return {
+        first: expression,  
+        second: expression,
+        operator: expression
+    };
 }
 
 export const resolveExpression = (expression: string): number => {
-    const lastOperation: IDirtyOperation = getLastPriorityOperation(expression);
+    const lastOperation: OperationWithExpressions  = getLastPriorityOperation(expression);
  
-    if(typeof(lastOperation.first) !== 'number'){
-        lastOperation.first = resolveExpression(lastOperation.first);
+    if (!isNumber(lastOperation.first)) {
+        lastOperation.first = resolveExpression(lastOperation.first)
+            .toString();
     }
 
-    if(typeof(lastOperation.second) !== 'number'){
-        lastOperation.second = resolveExpression(lastOperation.second);
+    if (!isNumber(lastOperation.second)) {
+        lastOperation.second = resolveExpression(lastOperation.second)
+            .toString();
     }
 
-    const operation: ScalarOperation = mathOperations.find(opr => opr.operator === lastOperation.operator);
+    const operation: ScalarOperation = simpleMathOperations.find(opr => opr.operator === lastOperation.operator);
 
-    return operation.operation(lastOperation.first, lastOperation.second);
+    return operation.operation(Number(lastOperation.first), Number(lastOperation.second));
 }
 

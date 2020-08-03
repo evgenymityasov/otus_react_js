@@ -1,4 +1,5 @@
 import { createInterface } from 'readline';
+import { runner } from './runner';
 
 const readLine = createInterface({
     input: process.stdin,
@@ -8,7 +9,7 @@ const readLine = createInterface({
 const getCalc = (): Promise<null> => 
     new Promise(resolve => {
         readLine.question("> ", (answer: string) => {
-            console.log(answer);
+            console.log(runner(answer));
 
             resolve();
         });

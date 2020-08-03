@@ -1,10 +1,16 @@
 import { resolveExpression } from  './resolver';
-import { isExpression } from './validator';
+import { isExpression, isNumber } from './validators';
 
-export const runner = (line: string): number| null => {
-    if (!isExpression(line)) { 
-        return null; 
+export const runner = (line: string): number| string => {
+    const clearedLine = line.replace(/\s/g, '');
+
+    if (!isExpression(clearedLine)) { 
+        return "invalid expression"; 
     }
 
-    return resolveExpression(line);
+    if(isNumber(clearedLine)){
+        return clearedLine;
+    }
+
+    return  resolveExpression(clearedLine);
 }
