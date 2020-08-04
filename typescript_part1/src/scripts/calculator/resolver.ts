@@ -2,13 +2,13 @@ import { simpleMathOperations, ScalarOperation, mathOperatorsPriorities } from '
 import { isNumber } from './validators';
 
 
- type OperationWithExpressions = { 
+type OperationWithExpressions = {
     first: string,
-    second: string, 
+    second: string,
     operator: string
 }
- 
-export const getLastPriorityOperation = (expression: string): OperationWithExpressions  => {
+
+export const getLastPriorityOperation = (expression: string): OperationWithExpressions => {
     let priority = Math.max(...mathOperatorsPriorities);
 
     while (priority > -1) {
@@ -24,7 +24,7 @@ export const getLastPriorityOperation = (expression: string): OperationWithExpre
 
         if (operatorLastIndex != -1) {
             return {
-                first: expression.substring(0, operatorLastIndex),  
+                first: expression.substring(0, operatorLastIndex),
                 second: expression.substring(operatorLastIndex + 1, expression.length),
                 operator: expression.substr(operatorLastIndex, 1)
             };
@@ -33,16 +33,12 @@ export const getLastPriorityOperation = (expression: string): OperationWithExpre
         priority--;
     }
 
-    return {
-        first: expression,  
-        second: expression,
-        operator: expression
-    };
+    return;
 }
 
 export const resolveExpression = (expression: string): number => {
-    const lastOperation: OperationWithExpressions  = getLastPriorityOperation(expression);
- 
+    const lastOperation: OperationWithExpressions = getLastPriorityOperation(expression);
+
     if (!isNumber(lastOperation.first)) {
         lastOperation.first = resolveExpression(lastOperation.first)
             .toString();

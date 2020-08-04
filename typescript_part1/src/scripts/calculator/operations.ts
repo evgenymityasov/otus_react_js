@@ -36,17 +36,4 @@ export const simpleMathOperations: ScalarOperation[] = [
         priority: 0,
         operation: divition
     }
-]
-
-
-
-export const getOperation = (operator: string): BinaryOperation => {
-    switch(operator){
-        case '+': return addition;
-        case '-': return subtraction;
-        case '*': return multiplication;
-        case '/': return divition;
-        default: (first: number, second: number): number => NaN
-    }
-};
-
+];
